@@ -1,12 +1,12 @@
-import time
+import asyncio
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
-from telegram.ext import Application, CommandHandler
+from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 
 # Bot token
-TOKEN = "7712183768:AAFB_5sDCNLNKcMwhvyjLP-nSFqkmSkiXkI"  # Replace with your actual bot token
+TOKEN = "7712183768:AAFB_5sDCNLNKcMwhvyjLP-nSFqkmSkiXkI"  # Replace with your actual bot token or use an environment variable
 
 # Start command handler
-async def start(update: Update, context):
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_full_name = update.message.from_user.full_name
     bot_name = context.bot.first_name
 
@@ -40,13 +40,14 @@ async def start(update: Update, context):
 
 # Main function to run the bot
 async def main():
-    application = Application.builder().token(TOKEN).build()
+    application = ApplicationBuilder().token(TOKEN).build()  # Use ApplicationBuilder
+
+    # Add start command handler
     application.add_handler(CommandHandler("start", start))
 
-    await application.start()
-    await application.updater.idle()
+    # Start the bot
+    await application.run_polling()  # Correct way to start the bot
 
 if __name__ == '__main__':
-    import asyncio
     asyncio.run(main())
-  
+    
